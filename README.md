@@ -2,7 +2,13 @@
 Spatial and temporal pattern of light-duty vehicles' emission in NYC
 
 ## Motivation
-The contribution of the transportation system to air pollution is not negligible. A large part of this emission contribution comes from gasoline fuel vehicles. Understanding vehicular emission behavior can help policymakers to leverage the the existing strategies, mitigate the fuel consumption and emission rate and thus have a clean air. with analysing GPS trajectory data, one can extract useful information regarding spatial and temporal vehicular emission in a city. In this project, I aim to analyze the light-duty vehicle trajectory data set to present new insights regarding the spatial and temporal pattern of vehicular emission in new york city.   
+The contribution of the transportation system to air pollution is not negligible. A large part of this emission contribution comes from gasoline fuel vehicles. Understanding vehicular emission behavior can help policymakers to leverage the the existing strategies, mitigate the fuel consumption and emission rate and thus have a clean air. with analysing GPS trajectory data, one can extract useful information regarding spatial and temporal vehicular emission in a city. In this project, I aim to analyze the light-duty vehicle trajectory data set to present new insights regarding the spatial and temporal pattern of vehicular emission in new york city. 
+
+## Prediction of emissions greater than 50 gr
+In this step, the variogram and semivariances are calculated for emissions greater than 50 gr.
+Then best spatial linear model is estimated using the ordinary krigging approach.
+![Algorithm](./figures/emission_prediction.png)
+
 ## Data
 The GPS trajectoriy data set used for this projec is given by the New York City Department of Transportation (NYC-DOT), and it belongs to the New York City Department of Citywide Administrative Services (NYC-DCAS). The data was collected by 27,000 city owned fleet of vehicles for one year and four months in 2015 and 2016. Data sampling rate is 30 seconds and consists of a timestamp, location (latitude and longitude), and speed.The data size is above 200 million rows of GPS records.
 ## Method
@@ -27,3 +33,20 @@ where the $v_{i,j} (km/h)$ is the average speed of vehicle i at segment j. The p
 | NOx|0.00 | -0.009 | 0.577 | 0 | 0 | 5.43 
 
 The raw data is stored in Postgres server, thereby, all emission calculations has been done in SQL and the aggregated emissions per segment are exported and saved as csv file which are loaded below for furthur spatial analysis. 
+
+## Spatial Analysis
+### Semivariances and Variogram
+In this project, semivariograms are calculated to assess the spatial correlation between the spatially distributed point emissions. Semivariograms depict the degree of similarity between neighbors as distance between them increases. Semivariances can be calculated using the equation as follow:
+$$ \lambda(h) = \frac{1}{2}E[(z(s_i) - z(s_i+h))^2]$$
+
+where $z(s_i)$ is the value of a spatial random variable $s_i$ and $z(s_i + h)$ is the value of the neighbor random variable $s_i + h$ with $h$ as the distance between two points.
+Herein, the sample semivariances are calculated and shown by the variogram plot below. Then, the exponential Variogram has been fitted to the the semivariances.   
+
+## Kriging
+After calculating the variograms,the best linear model can be estimated to predict the vehicular emission at the intermediate locations.  The semivariances are used to calculate the weights of the linear estimator. Suppose, $z(x_i)s, i=1,..N$ are the observed values at locations $x_i$s, thus for any new location $x_0$ the value of $z(x_0)$ can be calculated as follows [2]:
+$$Z(x_0) = \sum_{i=1}^{N} = \lambda_iz(x_i)$$
+where $\lambda_i$s are the weights that minimizes the the error variance of the predicted model. $\lambda_i$s can be computed through the equations below:
+$$\sum_{i=1}^{N} = \lambda_i\gamma(x_i-x_j) + \psi(x_o) = \gamma(x_j-x_0) $$
+$$\sum_{i=1}^{N}\lambda_i = 1$$
+where $\gamma(x_i-x_j)$ is the semivariance between $x_i$ and $x_j$, $\gamma(x_j-x_0)$ is the semivariance between $x_j$ and the target location $x_0$, and $\psi(x_o)$ is the lagrange multiplier.
+To implement the kriging, first, the area needs to be gridded into cells. To this end, the polygon of the Manhattan borough and the Central park needs to be loaded.
