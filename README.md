@@ -11,6 +11,8 @@ Then best spatial linear model is estimated using the ordinary krigging approach
 
 ## Data
 The GPS trajectoriy data set used for this project  was collected by 27,000 city owned fleet of vehicles for one year and four months in 2015 and 2016. Data sampling rate is 30 seconds and consists of a timestamp, location (latitude and longitude), and speed.The data size is above 200 million rows of GPS records.
+
+The raw data is stored in Postgres server, thereby, all emission calculations has been done in SQL and the aggregated emissions per segment are exported and saved as csv file which are loaded for furthur spatial analysis. 
 ## Method
 ### Data Processing
 The GPS records usually are noisy especially in metropolitan areas where the high rise buildings blocks the sattelite signals and cause error in GPS location records. To this end, using map matching algorithms, the GPS points are projected to the best nearest segment candidate. After map matching,  roadway segment id has been added to the GPS trajectory data set, i.e., a segment id has been assigned to each GPS record and these ids are identical to the roadway segment ids presented at New York city shape file. Therefore, trajectory of each vehcile consists of a sequence of segments in each of which the average speed of vehicle speed can be calculated. 
@@ -32,7 +34,7 @@ where the $v_{i,j} (km/h)$ is the average speed of vehicle i at segment j. The p
 |CO|0.00|-0.033|5.11|0.002|-0.529|37.51 
 | NOx|0.00 | -0.009 | 0.577 | 0 | 0 | 5.43 
 
-The raw data is stored in Postgres server, thereby, all emission calculations has been done in SQL and the aggregated emissions per segment are exported and saved as csv file which are loaded below for furthur spatial analysis. 
+
 
 ## Spatial Analysis
 ### Semivariances and Variogram
