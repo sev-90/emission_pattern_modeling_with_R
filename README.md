@@ -10,7 +10,7 @@ Then best spatial linear model is estimated using the ordinary krigging approach
 ![Algorithm](./figures/emission_prediction.png)
 
 ## Data
-The GPS trajectoriy data set used for this projec is given by the New York City Department of Transportation (NYC-DOT), and it belongs to the New York City Department of Citywide Administrative Services (NYC-DCAS). The data was collected by 27,000 city owned fleet of vehicles for one year and four months in 2015 and 2016. Data sampling rate is 30 seconds and consists of a timestamp, location (latitude and longitude), and speed.The data size is above 200 million rows of GPS records.
+The GPS trajectoriy data set used for this project  was collected by 27,000 city owned fleet of vehicles for one year and four months in 2015 and 2016. Data sampling rate is 30 seconds and consists of a timestamp, location (latitude and longitude), and speed.The data size is above 200 million rows of GPS records.
 ## Method
 ### Data Processing
 The GPS records usually are noisy especially in metropolitan areas where the high rise buildings blocks the sattelite signals and cause error in GPS location records. To this end, using map matching algorithms, the GPS points are projected to the best nearest segment candidate. After map matching,  roadway segment id has been added to the GPS trajectory data set, i.e., a segment id has been assigned to each GPS record and these ids are identical to the roadway segment ids presented at New York city shape file. Therefore, trajectory of each vehcile consists of a sequence of segments in each of which the average speed of vehicle speed can be calculated. 
